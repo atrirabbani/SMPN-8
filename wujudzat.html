@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Partikel: Wujud Zat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdfa; /* Soft teal background */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Custom Animations */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .bounce-soft { animation: bounceSoft 2s infinite ease-in-out; }
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounceSoft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e0f2fe; }
+        ::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 10px; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 2px solid white;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            background: linear-gradient(to bottom, #1e293b, #0f172a);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="w-full min-h-screen text-slate-800 flex flex-col items-center justify-center p-2 md:p-6">
+
+    <!-- Audio Player (Hidden, Conceptual for ID) -->
+    <audio id="bgm" loop>
+        <!-- Placeholder for actual BGM -->
+    </audio>
+
+    <!-- Main Container -->
+    <div id="app-container" class="relative w-full max-w-4xl min-h-[90vh] md:h-[85vh] glass-panel rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+        
+        <!-- Top Navigation / Header (Hidden on Splash) -->
+        <header id="header" class="hidden w-full bg-teal-500 text-white p-4 flex justify-between items-center shadow-md z-10 rounded-t-3xl">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 256 256"><path d="M216.49,104.49l-80-80a12,12,0,0,0-17,0l-80,80a12,12,0,0,0-3.52,8.48L32,208a12,12,0,0,0,12,12H212a12,12,0,0,0,12-12V112.97A12,12,0,0,0,216.49,104.49ZM200,200H56V118l72-72,72,72Z"></path></svg>
+                Petualangan Partikel
+            </h1>
+            <button onclick="goToScene('scene1')" class="bg-teal-600 hover:bg-teal-700 px-3 py-1 rounded-full text-sm transition font-semibold">
+                Menu Utama
+            </button>
+        </header>
+
+        <!-- Content Area -->
+        <main class="flex-1 relative overflow-y-auto overflow-x-hidden p-4 md:p-8 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2U1ZTdlYiIvPjwvc3ZnPg==')]">
+            
+            <!-- SCENE 1: Splash Screen & Menu -->
+            <section id="scene1" class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-teal-400 to-blue-500 text-white p-6 z-20">
+                <div class="text-center slide-up">
+                    <div class="inline-block p-6 bg-white rounded-full mb-6 shadow-xl bounce-soft">
+                        <svg class="w-24 h-24 text-teal-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">Petualangan Partikel</h1>
+                    <p class="text-lg md:text-xl mb-2 bg-black/20 py-2 px-6 rounded-full inline-block backdrop-blur-sm">Misteri Wujud Zat - IPA Kelas 7</p>
+                    
+                    <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="startLearning()" class="bg-yellow-400 hover:bg-yellow-300 text-slate-800 font-bold text-xl py-4 px-8 rounded-full shadow-lg transform hover:scale-105 transition">
+                            ▶ Mulai Belajar
+                        </button>
+                        <button onclick="showModal('infoModal')" class="bg-white/20 hover:bg-white/30 text-white font-bold text-xl py-4 px-8 rounded-full shadow-lg border border-white/50 transform hover:scale-105 transition">
+                            ℹ️ Info
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCENE 2: Apersepsi & Motivasi -->
+            <section id="scene2" class="hidden fade-in h-full flex flex-col items-center justify-center max-w-2xl mx-auto text-center">
+                <div class="bg-white p-8 rounded-3xl shadow-xl w-full">
+                    <h2 class="text-3xl font-bold text-teal-600 mb-6">Pernahkah kamu berpikir? 🤔</h2>
+                    
+                    <div class="flex flex-col md:flex-row gap-6 mb-8 items-center justify-center">
+                        <div class="bg-blue-50 p-4 rounded-2xl w-48 shadow-inner border border-blue-100 relative group">
+                            <span class="text-6xl group-hover:scale-110 transition inline-block">🧊</span>
+                            <p class="mt-4 font-semibold text-slate-700">Es Batu bentuknya selalu tetap meskipun dipindah-pindah tempat.</p>
+                        </div>
+                        <div class="text-4xl text-slate-300 font-bold hidden md:block">VS</div>
+                        <div class="bg-cyan-50 p-4 rounded-2xl w-48 shadow-inner border border-cyan-100 relative group">
+                            <span class="text-6xl group-hover:scale-110 transition inline-block">💧</span>
+                            <p class="mt-4 font-semibold text-slate-700">Air putih mudah tumpah dan bentuknya berubah mengikuti gelasnya.</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-lg text-slate-600 mb-8 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+                        Kira-kira, apa ya yang membedakan mereka di bagian dalamnya yang sangat kecil (partikel)? Mari kita selidiki seperti seorang detektif sains!
+                    </p>
+                    
+                    <button onclick="goToScene('scene3')" class="bg-teal-500 hover:bg-teal-400 text-white font-bold py-3 px-8 rounded-full shadow-md transition flex items-center gap-2 mx-auto">
+                        Mari Cari Tahu! 
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- SCENE 3: Eksplorasi Wujud Zat & Model Partikel (Canvas) -->
+            <section id="scene3" class="hidden fade-in flex flex-col h-full">
+                <h2 class="text-2xl font-bold text-slate-700 mb-4 text-center">Laboratorium Partikel 🔬</h2>
+                <p class="text-center text-slate-500 mb-4 text-sm md:text-base">Pilih tombol di bawah untuk melihat bagaimana partikel bergerak pada masing-masing wujud zat.</p>
+
+                <!-- Tabs -->
+                <div class="flex justify-center gap-2 md:gap-4 mb-4">
+                    <button onclick="changeParticleState('padat')" id="btn-padat" class="state-btn flex-1 max-w-[120px] bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-xl shadow transition">Padat</button>
+                    <button onclick="changeParticleState('cair')" id="btn-cair" class="state-btn flex-1 max-w-[120px] bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-xl shadow transition">Cair</button>
+                    <button onclick="changeParticleState('gas')" id="btn-gas" class="state-btn flex-1 max-w-[120px] bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-xl shadow transition">Gas</button>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-6 h-full min-h-[350px]">
+                    <!-- Canvas Container -->
+                    <div class="flex-1 relative w-full h-[250px] md:h-auto rounded-xl overflow-hidden border-4 border-slate-300 shadow-inner">
+                        <canvas id="particleCanvas"></canvas>
+                        <!-- Magnifying glass overlay -->
+                        <div class="absolute top-2 left-2 bg-white/80 p-2 rounded-lg shadow backdrop-blur-sm pointer-events-none">
+                            <span class="text-xs font-bold text-slate-800">Perbesaran 100.000.000x</span>
+                        </div>
+                    </div>
+
+                    <!-- Info Panel -->
+                    <div class="flex-1 bg-white rounded-xl shadow p-5 border border-slate-100 flex flex-col justify-center">
+                        <h3 id="info-title" class="text-xl font-extrabold text-teal-600 mb-2 border-b-2 border-teal-100 pb-2">Zat Padat</h3>
+                        <ul class="space-y-3 mt-2 text-sm md:text-base text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <span class="text-teal-500 font-bold">●</span>
+                                <div><strong>Bentuk & Volume:</strong> <span id="info-bentuk">Tetap dan Tetap</span></div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-teal-500 font-bold">●</span>
+                                <div><strong>Jarak Partikel:</strong> <span id="info-jarak">Sangat rapat</span></div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-teal-500 font-bold">●</span>
+                                <div><strong>Gaya Tarik:</strong> <span id="info-gaya">Sangat kuat</span></div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-teal-500 font-bold">●</span>
+                                <div><strong>Gerakan:</strong> <span id="info-gerak">Hanya bergetar di tempat</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <button onclick="goToScene('scene4')" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow transition">
+                        Lanjut: Perubahan Wujud ➡️
+                    </button>
+                </div>
+            </section>
+
+            <!-- SCENE 4: Perubahan Wujud Zat (Diagram) -->
+            <section id="scene4" class="hidden fade-in h-full flex flex-col items-center">
+                <h2 class="text-2xl font-bold text-slate-700 mb-2">Segitiga Perubahan Wujud Zat 🔺</h2>
+                <p class="text-slate-500 mb-6 text-sm text-center">Zat bisa berubah wujud jika menerima atau melepaskan energi panas (kalor).</p>
+
+                <div class="relative w-full max-w-lg aspect-square bg-white rounded-3xl shadow-lg p-4 md:p-8 flex items-center justify-center overflow-hidden border border-slate-200">
+                    
+                    <!-- Gas (Top) -->
+                    <div class="absolute top-8 left-1/2 -translate-x-1/2 bg-slate-100 p-4 rounded-full border-4 border-slate-300 z-10 w-24 h-24 flex items-center justify-center flex-col shadow-md">
+                        <span class="text-2xl">☁️</span>
+                        <span class="text-xs font-bold mt-1">GAS</span>
+                    </div>
+
+                    <!-- Padat (Bottom Left) -->
+                    <div class="absolute bottom-12 left-8 bg-blue-100 p-4 rounded-full border-4 border-blue-300 z-10 w-24 h-24 flex items-center justify-center flex-col shadow-md">
+                        <span class="text-2xl">🧊</span>
+                        <span class="text-xs font-bold mt-1">PADAT</span>
+                    </div>
+
+                    <!-- Cair (Bottom Right) -->
+                    <div class="absolute bottom-12 right-8 bg-cyan-100 p-4 rounded-full border-4 border-cyan-300 z-10 w-24 h-24 flex items-center justify-center flex-col shadow-md">
+                        <span class="text-2xl">💧</span>
+                        <span class="text-xs font-bold mt-1">CAIR</span>
+                    </div>
+
+                    <!-- Arrows & Labels SVG -->
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <defs>
+                            <marker id="arrowhead-red" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+                                <polygon points="0 0, 6 2, 0 4" fill="#ef4444" />
+                            </marker>
+                            <marker id="arrowhead-blue" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+                                <polygon points="0 0, 6 2, 0 4" fill="#3b82f6" />
+                            </marker>
+                        </defs>
+
+                        <!-- Padat to Cair (Mencair) - Red -->
+                        <path d="M 35 80 Q 50 75 65 80" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2,1" marker-end="url(#arrowhead-red)" />
+                        
+                        <!-- Cair to Padat (Membeku) - Blue -->
+                        <path d="M 65 85 Q 50 90 35 85" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="2,1" marker-end="url(#arrowhead-blue)" />
+
+                        <!-- Cair to Gas (Menguap) - Red -->
+                        <path d="M 70 70 Q 75 45 55 25" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2,1" marker-end="url(#arrowhead-red)" />
+
+                        <!-- Gas to Cair (Mengembun) - Blue -->
+                        <path d="M 60 20 Q 85 45 75 75" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="2,1" marker-end="url(#arrowhead-blue)" />
+
+                        <!-- Padat to Gas (Menyublim) - Red -->
+                        <path d="M 30 70 Q 25 45 45 25" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2,1" marker-end="url(#arrowhead-red)" />
+
+                        <!-- Gas to Padat (Mengkristal) - Blue -->
+                        <path d="M 40 20 Q 15 45 25 75" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="2,1" marker-end="url(#arrowhead-blue)" />
+                    </svg>
+
+                    <!-- Labels HTML overlaid -->
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-center w-full pointer-events-none">
+                        <span class="bg-white/80 px-2 py-1 rounded text-[10px] text-red-500 font-bold block mb-1">Mencair (Terima Kalor) ➡️</span>
+                        <span class="bg-white/80 px-2 py-1 rounded text-[10px] text-blue-500 font-bold block">⬅️ Membeku (Lepas Kalor)</span>
+                    </div>
+
+                    <div class="absolute top-[40%] right-2 text-center pointer-events-none">
+                        <span class="bg-white/80 px-2 py-1 rounded text-[10px] text-red-500 font-bold block mb-1">Menguap ⬆️</span>
+                        <span class="bg-white/80 px-2 py-1 rounded text-[10px] text-blue-500 font-bold block">⬇️ Mengembun</span>
+                    </div>
+
+                    <div class="absolute top-[40%] left-2 text-center pointer-events-none">
+                        <span class="bg-white/80 px-2 py-1 rounded text-[10px] text-red-500 font-bold block mb-1">⬆️ Menyublim</span>
+                        <span class="bg-white/80 px-2 py-1 rounded text-[10px] text-blue-500 font-bold block">Mengkristal ⬇️</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <button onclick="goToScene('scene5')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-full shadow transition">
+                        Ayo Main Game! 🎮
+                    </button>
+                </div>
+            </section>
+
+            <!-- SCENE 5: Mini Game (Sortir Benda) -->
+            <section id="scene5" class="hidden fade-in flex flex-col h-full">
+                <div class="text-center mb-4">
+                    <h2 class="text-2xl font-bold text-slate-700">Mini Game: Sortir Benda 🕹️</h2>
+                    <p class="text-slate-500 text-sm">Ketuk benda, lalu ketuk kotak wujud yang tepat!</p>
+                </div>
+
+                <!-- Score/Progress -->
+                <div class="w-full bg-slate-200 rounded-full h-2.5 mb-4">
+                    <div id="game-progress" class="bg-orange-500 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+
+                <!-- Draggable Items Container -->
+                <div id="items-container" class="flex flex-wrap justify-center gap-3 mb-8 min-h-[60px]">
+                    <!-- Generated via JS -->
+                </div>
+
+                <!-- Drop Zones -->
+                <div class="grid grid-cols-3 gap-2 md:gap-4 mt-auto">
+                    <div onclick="selectCategory('Padat')" class="drop-zone bg-blue-50 rounded-xl p-4 border-2 border-dashed border-blue-300 flex flex-col items-center cursor-pointer transition hover:bg-blue-100">
+                        <span class="text-xl md:text-3xl mb-2">📦</span>
+                        <h3 class="font-bold text-blue-800 text-sm md:text-base">Padat</h3>
+                        <div id="zone-Padat" class="mt-2 text-xs text-slate-500 flex flex-col gap-1 w-full items-center"></div>
+                    </div>
+                    <div onclick="selectCategory('Cair')" class="drop-zone bg-cyan-50 rounded-xl p-4 border-2 border-dashed border-cyan-300 flex flex-col items-center cursor-pointer transition hover:bg-cyan-100">
+                        <span class="text-xl md:text-3xl mb-2">💧</span>
+                        <h3 class="font-bold text-cyan-800 text-sm md:text-base">Cair</h3>
+                        <div id="zone-Cair" class="mt-2 text-xs text-slate-500 flex flex-col gap-1 w-full items-center"></div>
+                    </div>
+                    <div onclick="selectCategory('Gas')" class="drop-zone bg-gray-50 rounded-xl p-4 border-2 border-dashed border-gray-300 flex flex-col items-center cursor-pointer transition hover:bg-gray-100">
+                        <span class="text-xl md:text-3xl mb-2">☁️</span>
+                        <h3 class="font-bold text-gray-600 text-sm md:text-base">Gas</h3>
+                        <div id="zone-Gas" class="mt-2 text-xs text-slate-500 flex flex-col gap-1 w-full items-center"></div>
+                    </div>
+                </div>
+
+                <!-- Next button, hidden initially -->
+                <div id="btn-next-quiz" class="hidden mt-6 text-center">
+                    <p class="text-green-600 font-bold mb-2">Hebat! Kamu berhasil menyortir semua benda!</p>
+                    <button onclick="goToScene('scene6')" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-6 rounded-full shadow transition">
+                        Lanjut ke Kuis 📝
+                    </button>
+                </div>
+            </section>
+
+            <!-- SCENE 6: Evaluasi / Kuis -->
+            <section id="scene6" class="hidden fade-in flex flex-col h-full items-center justify-center">
+                
+                <div id="quiz-container" class="w-full max-w-lg bg-white p-6 rounded-2xl shadow-lg border border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-purple-600">Kuis Evaluasi</h2>
+                        <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded-full" id="quiz-progress">Soal 1 / 5</span>
+                    </div>
+
+                    <div id="question-text" class="text-lg text-slate-800 font-semibold mb-6">
+                        <!-- Question goes here -->
+                    </div>
+
+                    <div id="options-container" class="flex flex-col gap-3">
+                        <!-- Options generated via JS -->
+                    </div>
+
+                    <!-- Feedback Box -->
+                    <div id="quiz-feedback" class="hidden mt-4 p-3 rounded-lg text-sm font-semibold">
+                    </div>
+
+                    <button id="btn-next-question" onclick="nextQuestion()" class="hidden w-full mt-6 bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-xl transition">
+                        Soal Berikutnya
+                    </button>
+                </div>
+
+                <!-- Result Container -->
+                <div id="quiz-result" class="hidden w-full max-w-md bg-white p-8 rounded-2xl shadow-lg text-center">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">Selesai! 🎉</h2>
+                    <p class="text-slate-500 mb-6">Kamu telah menyelesaikan misi petualangan wujud zat.</p>
+                    
+                    <div class="w-32 h-32 mx-auto bg-gradient-to-tr from-purple-400 to-blue-500 rounded-full flex items-center justify-center text-white text-5xl font-black mb-6 shadow-inner border-4 border-white">
+                        <span id="final-score">100</span>
+                    </div>
+
+                    <p id="score-message" class="text-lg font-semibold text-slate-700 mb-8">Luar Biasa! Kamu ilmuwan hebat!</p>
+
+                    <div class="flex gap-4 justify-center">
+                        <button onclick="resetApp()" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-6 rounded-full transition shadow-md">
+                            Main Lagi
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modals (Custom Alerts) -->
+    <div id="infoModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full text-center shadow-2xl scale-100 transition-transform">
+            <h3 class="text-2xl font-bold text-teal-600 mb-2">Tujuan Pembelajaran</h3>
+            <p class="text-slate-600 text-sm mb-6 text-left">
+                1. Menganalisis perbedaan sifat zat padat, cair, dan gas.<br>
+                2. Memahami model partikel dari ketiga wujud zat tersebut.<br>
+                3. Menjelaskan proses perubahan wujud zat.
+            </p>
+            <button onclick="hideModal('infoModal')" class="bg-teal-500 hover:bg-teal-600 w-full text-white font-bold py-2 px-4 rounded-xl transition">
+                Mengerti
+            </button>
+        </div>
+    </div>
+
+    <div id="messageModal" class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 max-w-xs w-full text-center shadow-xl">
+            <div id="messageIcon" class="text-4xl mb-2">⚠️</div>
+            <h3 id="messageTitle" class="text-lg font-bold text-slate-800 mb-1">Perhatian</h3>
+            <p id="messageText" class="text-slate-600 text-sm mb-4">Pesan disini.</p>
+            <button onclick="hideModal('messageModal')" class="bg-slate-800 text-white font-bold py-2 px-4 rounded-xl w-full">OK</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Core Navigation ---
+        const scenes = ['scene1', 'scene2', 'scene3', 'scene4', 'scene5', 'scene6'];
+        let currentScene = 'scene1';
+
+        function startLearning() {
+            goToScene('scene2');
+            document.getElementById('header').classList.remove('hidden');
+            // Conceptual BGM Play (would require user interaction policy handling)
+            // document.getElementById('bgm').play().catch(e => console.log("Audio play blocked"));
+        }
+
+        function goToScene(sceneId) {
+            scenes.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(sceneId).classList.remove('hidden');
+            currentScene = sceneId;
+
+            if (sceneId === 'scene1') {
+                document.getElementById('header').classList.add('hidden');
+            } else {
+                document.getElementById('header').classList.remove('hidden');
+            }
+
+            if (sceneId === 'scene3') {
+                changeParticleState('padat'); // Default tab
+                setTimeout(resizeCanvas, 100); // ensure canvas renders properly
+            }
+            if (sceneId === 'scene5') {
+                initGame();
+            }
+            if (sceneId === 'scene6') {
+                initQuiz();
+            }
+        }
+
+        function showMessage(title, text, type="info") {
+            document.getElementById('messageTitle').innerText = title;
+            document.getElementById('messageText').innerText = text;
+            document.getElementById('messageIcon').innerText = type === 'error' ? '❌' : (type === 'success' ? '✅' : 'ℹ️');
+            document.getElementById('messageModal').classList.remove('hidden');
+        }
+
+        function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // --- Canvas Particle Simulation (Scene 3) ---
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId;
+        let currentState = 'padat';
+
+        const stateInfo = {
+            padat: {
+                bentuk: "Tetap dan Tetap",
+                jarak: "Sangat rapat",
+                gaya: "Sangat kuat",
+                gerak: "Hanya bergetar di tempat",
+                color: "bg-blue-500",
+                textColor: "text-blue-600"
+            },
+            cair: {
+                bentuk: "Berubah dan Tetap",
+                jarak: "Lebih renggang dari padat",
+                gaya: "Lebih lemah dari padat",
+                gerak: "Bebas bergerak tapi terbatas",
+                color: "bg-cyan-500",
+                textColor: "text-cyan-600"
+            },
+            gas: {
+                bentuk: "Berubah dan Berubah",
+                jarak: "Sangat renggang",
+                gaya: "Sangat lemah (hampir tidak ada)",
+                gerak: "Sangat bebas dan cepat",
+                color: "bg-gray-500",
+                textColor: "text-gray-600"
+            }
+        };
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            initParticles();
+        }
+        window.addEventListener('resize', () => {
+            if(currentScene === 'scene3') resizeCanvas();
+        });
+
+        class Particle {
+            constructor(x, y, type) {
+                this.baseX = x;
+                this.baseY = y;
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.radius = 8;
+                
+                // Random velocities for gas/liquid
+                let speedMult = type === 'gas' ? 5 : (type === 'cair' ? 1.5 : 0);
+                this.vx = (Math.random() - 0.5) * speedMult;
+                this.vy = (Math.random() - 0.5) * speedMult;
+                
+                // Color based on state
+                this.color = type === 'padat' ? '#3b82f6' : (type === 'cair' ? '#06b6d4' : '#9ca3af');
+            }
+
+            update() {
+                if (this.type === 'padat') {
+                    // Vibrate around base position
+                    this.x = this.baseX + (Math.random() - 0.5) * 2;
+                    this.y = this.baseY + (Math.random() - 0.5) * 2;
+                } else if (this.type === 'cair') {
+                    // Move freely but bounded to bottom 60% of canvas
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    let boundY = canvas.height * 0.4; // Liquid surface
+                    
+                    if (this.x < this.radius || this.x > canvas.width - this.radius) this.vx *= -1;
+                    if (this.y < boundY || this.y > canvas.height - this.radius) this.vy *= -1;
+
+                    // Gravity/settling effect slightly
+                    if (this.y < canvas.height - this.radius) this.vy += 0.05;
+
+                    // Add a tiny bit of random motion to simulate liquid turbulence
+                    this.vx += (Math.random() - 0.5) * 0.2;
+                    // Cap speed
+                    if(this.vx > 2) this.vx = 2; if(this.vx < -2) this.vx = -2;
+
+                } else if (this.type === 'gas') {
+                    // Fast random movement, full canvas bounce
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x < this.radius || this.x > canvas.width - this.radius) this.vx *= -1;
+                    if (this.y < this.radius || this.y > canvas.height - this.radius) this.vy *= -1;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                // Inner highlight for 3D effect
+                ctx.beginPath();
+                ctx.arc(this.x - 2, this.y - 2, this.radius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const cols = 8;
+            const rows = 6;
+            const spacing = 20;
+
+            if (currentState === 'padat') {
+                // Generate grid
+                let startX = canvas.width / 2 - ((cols-1) * spacing)/2;
+                let startY = canvas.height / 2 - ((rows-1) * spacing)/2 + 20; // centered slightly down
+                for (let i = 0; i < cols; i++) {
+                    for (let j = 0; j < rows; j++) {
+                        particles.push(new Particle(startX + i * spacing, startY + j * spacing, 'padat'));
+                    }
+                }
+            } else if (currentState === 'cair') {
+                // Random in bottom area
+                for (let i = 0; i < 40; i++) {
+                    let x = Math.random() * (canvas.width - 20) + 10;
+                    let y = canvas.height - Math.random() * (canvas.height * 0.5) - 10;
+                    particles.push(new Particle(x, y, 'cair'));
+                }
+            } else if (currentState === 'gas') {
+                // Sparse everywhere
+                for (let i = 0; i < 15; i++) {
+                    let x = Math.random() * (canvas.width - 20) + 10;
+                    let y = Math.random() * (canvas.height - 20) + 10;
+                    particles.push(new Particle(x, y, 'gas'));
+                }
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw beaker lines conceptually
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(10, 10);
+            ctx.lineTo(10, canvas.height - 10);
+            ctx.lineTo(canvas.width - 10, canvas.height - 10);
+            ctx.lineTo(canvas.width - 10, 10);
+            ctx.stroke();
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            animationId = requestAnimationFrame(animateCanvas);
+        }
+
+        function changeParticleState(state) {
+            currentState = state;
+            
+            // Update buttons UI
+            ['padat', 'cair', 'gas'].forEach(s => {
+                let btn = document.getElementById('btn-' + s);
+                btn.classList.remove('bg-blue-500', 'bg-cyan-500', 'bg-gray-500', 'text-white');
+                btn.classList.add('bg-slate-200', 'text-slate-700');
+            });
+            
+            let activeBtn = document.getElementById('btn-' + state);
+            activeBtn.classList.remove('bg-slate-200', 'text-slate-700');
+            activeBtn.classList.add(stateInfo[state].color, 'text-white');
+
+            // Update Text Info
+            document.getElementById('info-title').innerText = "Zat " + state.charAt(0).toUpperCase() + state.slice(1);
+            document.getElementById('info-title').className = `text-xl font-extrabold ${stateInfo[state].textColor} mb-2 border-b-2 border-slate-100 pb-2`;
+            
+            document.getElementById('info-bentuk').innerText = stateInfo[state].bentuk;
+            document.getElementById('info-jarak').innerText = stateInfo[state].jarak;
+            document.getElementById('info-gaya').innerText = stateInfo[state].gaya;
+            document.getElementById('info-gerak').innerText = stateInfo[state].gerak;
+
+            // Restart Canvas
+            cancelAnimationFrame(animationId);
+            initParticles();
+            animateCanvas();
+        }
+
+        // --- Mini Game Logic (Scene 5) ---
+        const gameItemsData = [
+            { id: 'item1', name: 'Batu', category: 'Padat', icon: '🪨' },
+            { id: 'item2', name: 'Asap Knalpot', category: 'Gas', icon: '💨' },
+            { id: 'item3', name: 'Air Minum', category: 'Cair', icon: '🥛' },
+            { id: 'item4', name: 'Minyak Goreng', category: 'Cair', icon: '🛢️' },
+            { id: 'item5', name: 'Kayu', category: 'Padat', icon: '🪵' },
+            { id: 'item6', name: 'Oksigen (Balon)', category: 'Gas', icon: '🎈' }
+        ];
+
+        let selectedItem = null;
+        let placedItems = 0;
+
+        function initGame() {
+            const container = document.getElementById('items-container');
+            container.innerHTML = '';
+            document.getElementById('zone-Padat').innerHTML = '';
+            document.getElementById('zone-Cair').innerHTML = '';
+            document.getElementById('zone-Gas').innerHTML = '';
+            document.getElementById('game-progress').style.width = '0%';
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+            placedItems = 0;
+            selectedItem = null;
+
+            // Shuffle array
+            let items = [...gameItemsData].sort(() => Math.random() - 0.5);
+
+            items.forEach(item => {
+                let div = document.createElement('div');
+                div.id = item.id;
+                div.className = 'game-item bg-white px-4 py-2 rounded-full border-2 border-slate-300 shadow cursor-pointer hover:border-orange-400 transition transform font-semibold text-slate-700 flex items-center gap-2';
+                div.innerHTML = `<span>${item.icon}</span> ${item.name}`;
+                div.onclick = () => selectItem(item.id, item.category);
+                container.appendChild(div);
+            });
+        }
+
+        function selectItem(id, correctCategory) {
+            // Deselect previous
+            document.querySelectorAll('.game-item').forEach(el => el.classList.remove('ring-4', 'ring-orange-400', 'scale-110'));
+            
+            selectedItem = { id, category: correctCategory };
+            let el = document.getElementById(id);
+            el.classList.add('ring-4', 'ring-orange-400', 'scale-110');
+        }
+
+        function selectCategory(category) {
+            if (!selectedItem) {
+                showMessage("Pilih Benda", "Silakan ketuk salah satu benda di atas terlebih dahulu, lalu ketuk kotak wujudnya.", "info");
+                return;
+            }
+
+            let el = document.getElementById(selectedItem.id);
+
+            if (selectedItem.category === category) {
+                // Correct match
+                el.classList.remove('ring-4', 'ring-orange-400', 'scale-110', 'bg-white', 'border-slate-300');
+                el.classList.add('bg-green-100', 'border-green-400', 'text-xs', 'px-2', 'py-1');
+                el.onclick = null; // remove event
+                
+                document.getElementById('zone-' + category).appendChild(el);
+                
+                // Play simple success effect via class
+                let zone = document.getElementById('zone-' + category).parentElement;
+                zone.classList.add('bg-green-200');
+                setTimeout(() => zone.classList.remove('bg-green-200'), 300);
+
+                placedItems++;
+                updateGameProgress();
+                selectedItem = null;
+            } else {
+                // Wrong match
+                el.classList.add('shake', 'border-red-500', 'text-red-600');
+                setTimeout(() => {
+                    el.classList.remove('shake', 'border-red-500', 'text-red-600');
+                }, 500);
+            }
+        }
+
+        function updateGameProgress() {
+            let percentage = (placedItems / gameItemsData.length) * 100;
+            document.getElementById('game-progress').style.width = percentage + '%';
+
+            if (placedItems === gameItemsData.length) {
+                document.getElementById('btn-next-quiz').classList.remove('hidden');
+                document.getElementById('btn-next-quiz').classList.add('bounce-soft');
+            }
+        }
+
+        // --- Quiz Logic (Scene 6) ---
+        const quizData = [
+            {
+                q: "Zat yang memiliki bentuk dan volume yang selalu tetap adalah...",
+                options: ["Zat Cair", "Zat Padat", "Zat Gas", "Plasma"],
+                answer: 1,
+                explanation: "Zat padat memiliki gaya tarik partikel yang sangat kuat sehingga bentuk dan volumenya selalu tetap."
+            },
+            {
+                q: "Mengapa gas sangat mudah ditekan (dimampatkan) menjadi volume yang lebih kecil?",
+                options: ["Karena jarak antar partikelnya sangat renggang", "Karena partikelnya diam di tempat", "Karena gaya tarik partikelnya sangat kuat", "Karena bentuknya selalu tetap"],
+                answer: 0,
+                explanation: "Partikel gas berjauhan (sangat renggang), sehingga ada banyak ruang kosong yang memungkinkan gas untuk ditekan."
+            },
+            {
+                q: "Perubahan wujud dari air (cair) menjadi uap (gas) saat dipanaskan disebut...",
+                options: ["Mencair", "Membeku", "Menguap", "Menyublim"],
+                answer: 2,
+                explanation: "Proses perubahan dari cair menjadi gas akibat menerima kalor disebut menguap."
+            },
+            {
+                q: "Partikel yang bergerak agak bebas tetapi masih berdekatan satu sama lain, adalah ciri-ciri dari zat...",
+                options: ["Padat", "Cair", "Gas", "Semua salah"],
+                answer: 1,
+                explanation: "Pada zat cair, partikel berdekatan namun tidak terikat kaku, sehingga bisa bergerak dan menyebabkan air dapat mengalir."
+            },
+            {
+                q: "Kapur barus yang dibiarkan di lemari lama-kelamaan akan habis. Peristiwa ini disebut menyublim, yaitu perubahan dari...",
+                options: ["Padat ke Cair", "Cair ke Gas", "Padat ke Gas", "Gas ke Padat"],
+                answer: 2,
+                explanation: "Menyublim adalah perubahan wujud langsung dari padat menjadi gas tanpa melewati fase cair."
+            }
+        ];
+
+        let currentQuestionIdx = 0;
+        let score = 0;
+        let answered = false;
+
+        function initQuiz() {
+            currentQuestionIdx = 0;
+            score = 0;
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            let qData = quizData[currentQuestionIdx];
+            
+            document.getElementById('quiz-progress').innerText = `Soal ${currentQuestionIdx + 1} / ${quizData.length}`;
+            document.getElementById('question-text').innerText = qData.q;
+            
+            let optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            qData.options.forEach((opt, index) => {
+                let btn = document.createElement('button');
+                btn.className = 'w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-purple-400 hover:bg-purple-50 font-medium text-slate-700 transition';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-question').classList.add('hidden');
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            if (answered) return;
+            answered = true;
+
+            let qData = quizData[currentQuestionIdx];
+            let isCorrect = selectedIndex === qData.answer;
+            
+            let buttons = document.getElementById('options-container').children;
+            
+            // Disable all buttons and show correct answer
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].onclick = null;
+                if (i === qData.answer) {
+                    buttons[i].classList.remove('border-slate-200', 'hover:bg-purple-50');
+                    buttons[i].classList.add('border-green-500', 'bg-green-100', 'text-green-800');
+                }
+            }
+
+            let feedbackBox = document.getElementById('quiz-feedback');
+            feedbackBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+
+            if (isCorrect) {
+                score += 20;
+                feedbackBox.classList.add('bg-green-100', 'text-green-800');
+                feedbackBox.innerHTML = `<strong>Benar! 🎉</strong> <br> ${qData.explanation}`;
+            } else {
+                btnElement.classList.add('border-red-500', 'bg-red-100', 'text-red-800');
+                feedbackBox.classList.add('bg-red-100', 'text-red-800');
+                feedbackBox.innerHTML = `<strong>Kurang Tepat. 😔</strong> <br> ${qData.explanation}`;
+            }
+
+            let nextBtn = document.getElementById('btn-next-question');
+            nextBtn.classList.remove('hidden');
+            if (currentQuestionIdx === quizData.length - 1) {
+                nextBtn.innerText = "Lihat Hasil Akhir";
+            } else {
+                nextBtn.innerText = "Soal Berikutnya";
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIdx++;
+            if (currentQuestionIdx < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            let resultBox = document.getElementById('quiz-result');
+            resultBox.classList.remove('hidden');
+            resultBox.classList.add('fade-in');
+            
+            document.getElementById('final-score').innerText = score;
+            
+            let msg = "";
+            if (score === 100) msg = "Sempurna! Kamu adalah Ilmuwan Hebat!";
+            else if (score >= 60) msg = "Bagus! Kamu sudah memahami materi dengan baik.";
+            else msg = "Jangan menyerah, ayo pelajari lagi materinya!";
+            
+            document.getElementById('score-message').innerText = msg;
+        }
+
+        function resetApp() {
+            goToScene('scene1');
+        }
+
+        // Initialize things on load if needed
+        window.onload = () => {
+            // Nothing strictly needed until user hits start
+        }
+    </script>
+</body>
+</html>
