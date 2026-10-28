@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPI PAI Kelas 9 - Meyakini Hari Akhir</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; }
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -9px; top: 0;
+            width: 20px; height: 20px; border-radius: 50%;
+            background-color: #10b981; border: 4px solid #d1fae5;
+        }
+        .correct-ans { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; }
+        .wrong-ans { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .option-btn { transition: all 0.2s ease-in-out; }
+        .option-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen pb-12">
+
+    <!-- Header / Hero Section -->
+    <header class="bg-gradient-to-r from-emerald-600 to-teal-800 text-white py-12 shadow-lg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg">
+                <defs><pattern id="pattern" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M0 40L40 0H20L0 20M40 40V20L20 40" fill="none" stroke="white" stroke-width="2"/></pattern></defs>
+                <rect width="100%" height="100%" fill="url(#pattern)"/>
+            </svg>
+        </div>
+        <div class="container mx-auto px-6 relative z-10 text-center">
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">PAI SMP Kelas IX</span>
+            <h1 class="text-3xl md:text-5xl font-bold mt-4 mb-2">Meyakini Hari Akhir dengan Mawas Diri</h1>
+            <p class="text-emerald-100 text-lg md:text-xl max-w-2xl mx-auto">Materi Pembelajaran Interaktif (MPI) untuk membentuk generasi yang beriman dan berakhlak mulia.</p>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 mt-[-30px] relative z-20">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            
+            <!-- Navigation Tabs -->
+            <div class="flex flex-wrap border-b border-gray-200 bg-gray-50 rounded-t-2xl">
+                <button onclick="openTab(event, 'tab-identitas')" class="tab-btn flex-1 py-4 px-2 text-sm font-semibold text-emerald-600 border-b-2 border-emerald-600 hover:bg-emerald-50 transition-colors">
+                    <i class="fas fa-info-circle mr-2"></i>Identitas & Tujuan
+                </button>
+                <button onclick="openTab(event, 'tab-materi')" class="tab-btn flex-1 py-4 px-2 text-sm font-semibold text-gray-500 border-b-2 border-transparent hover:bg-emerald-50 transition-colors">
+                    <i class="fas fa-book-open mr-2"></i>Materi Interaktif
+                </button>
+                <button onclick="openTab(event, 'tab-skenario')" class="tab-btn flex-1 py-4 px-2 text-sm font-semibold text-gray-500 border-b-2 border-transparent hover:bg-emerald-50 transition-colors">
+                    <i class="fas fa-chalkboard-teacher mr-2"></i>Skenario
+                </button>
+                <button onclick="openTab(event, 'tab-kuis')" class="tab-btn flex-1 py-4 px-2 text-sm font-semibold text-gray-500 border-b-2 border-transparent hover:bg-emerald-50 transition-colors">
+                    <i class="fas fa-gamepad mr-2"></i>Kuis Formatif
+                </button>
+            </div>
+
+            <div class="p-6 md:p-8">
+                
+                <!-- TAB 1: IDENTITAS & TUJUAN -->
+                <div id="tab-identitas" class="tab-content active">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-bullseye text-emerald-500 mr-3"></i> Informasi Umum & Tujuan
+                    </h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-emerald-50 p-6 rounded-xl border border-emerald-100">
+                            <h3 class="font-bold text-emerald-800 mb-3 text-lg">Informasi Modul</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li><strong>Mata Pelajaran:</strong> Pendidikan Agama Islam (PAI)</li>
+                                <li><strong>Kelas/Fase:</strong> IX (Sembilan) / Fase D</li>
+                                <li><strong>Topik:</strong> Meyakini Hari Akhir dengan Mawas Diri</li>
+                                <li><strong>Alokasi Waktu:</strong> 2 JP (2 x 40 Menit)</li>
+                                <li><strong>Target Peserta Didik:</strong> Reguler</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                            <h3 class="font-bold text-blue-800 mb-3 text-lg">Tujuan Pembelajaran</h3>
+                            <ul class="space-y-3 text-gray-700 list-disc pl-5 marker:text-blue-500">
+                                <li>Siswa mampu <strong>menjelaskan</strong> pengertian hari akhir (Kiamat Sugra dan Kubra).</li>
+                                <li>Siswa mampu <strong>menunjukkan dalil naqli</strong> terkait hari kiamat dengan benar.</li>
+                                <li>Siswa mampu <strong>menganalisis</strong> rangkaian peristiwa setelah kematian hingga hari pembalasan.</li>
+                                <li>Siswa mampu <strong>mengimplementasikan</strong> sikap mawas diri dalam kehidupan sehari-hari sebagai bukti keimanan.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: MATERI INTERAKTIF -->
+                <div id="tab-materi" class="tab-content">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-book-reader text-emerald-500 mr-3"></i> Eksplorasi Materi
+                    </h2>
+
+                    <!-- Bagian 1: Pengertian -->
+                    <div class="mb-10">
+                        <h3 class="text-xl font-bold mb-4 text-emerald-700 border-b-2 border-emerald-100 pb-2">1. Pengertian Kiamat</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-xl mr-3"><i class="fas fa-meteor"></i></div>
+                                    <h4 class="text-lg font-bold">Kiamat Sugra (Kecil)</h4>
+                                </div>
+                                <p class="text-gray-600 mb-3">Hancurnya sebagian alam semesta atau kematian setiap makhluk yang bernyawa.</p>
+                                <div class="bg-gray-50 p-3 rounded text-sm text-gray-700">
+                                    <strong>Tanda-tanda:</strong> Banyak terjadi bencana alam, wafatnya para ulama, maksiat merajalela, waktu terasa cepat.
+                                </div>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl mr-3"><i class="fas fa-globe"></i></div>
+                                    <h4 class="text-lg font-bold">Kiamat Kubra (Besar)</h4>
+                                </div>
+                                <p class="text-gray-600 mb-3">Hancurnya seluruh alam semesta beserta isinya secara total. Hari berakhirnya kehidupan dunia.</p>
+                                <div class="bg-gray-50 p-3 rounded text-sm text-gray-700">
+                                    <strong>Tanda-tanda:</strong> Terbitnya matahari dari barat, turunnya Nabi Isa a.s, keluarnya Dajjal dan Ya'juj Ma'juj.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bagian 2: Dalil -->
+                    <div class="mb-10">
+                        <h3 class="text-xl font-bold mb-4 text-emerald-700 border-b-2 border-emerald-100 pb-2">2. Dalil Naqli</h3>
+                        <div class="space-y-4">
+                            <div class="bg-emerald-50 p-5 rounded-lg border-l-4 border-emerald-500">
+                                <h4 class="font-bold text-lg mb-2">QS. Al-Zalzalah: 1-2</h4>
+                                <p class="text-right text-2xl font-arabic mb-2" dir="rtl">إِذَا زُلْزِلَتِ الْأَرْضُ زِلْزَالَهَا ﴿١﴾ وَأَخْرَجَتِ الْأَرْضُ أَثْقَالَهَا ﴿٢﴾</p>
+                                <p class="text-gray-600 italic">"Apabila bumi diguncangkan dengan guncangan yang dahsyat, dan bumi telah mengeluarkan beban-beban berat (yang dikandung)nya."</p>
+                            </div>
+                            <div class="bg-emerald-50 p-5 rounded-lg border-l-4 border-emerald-500">
+                                <h4 class="font-bold text-lg mb-2">QS. Al-Qari'ah: 4-5</h4>
+                                <p class="text-gray-600 italic">"Pada hari itu manusia seperti laron yang beterbangan. Dan gunung-gunung seperti bulu yang dihambur-hamburkan."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bagian 3: Timeline Peristiwa -->
+                    <div class="mb-10">
+                        <h3 class="text-xl font-bold mb-6 text-emerald-700 border-b-2 border-emerald-100 pb-2">3. Rangkaian Peristiwa Setelah Kematian</h3>
+                        <div class="relative border-l-4 border-emerald-200 ml-4 md:ml-6 pl-6 space-y-8 py-2">
+                            
+                            <div class="relative timeline-item">
+                                <h4 class="text-lg font-bold text-gray-800">1. Yaumul Barzakh (Alam Kubur)</h4>
+                                <p class="text-gray-600 mt-1">Alam batas antara dunia dan akhirat. Tempat roh menunggu hingga hari kebangkitan tiba. Di sini manusia ditanya oleh Malaikat Munkar dan Nakir.</p>
+                            </div>
+                            <div class="relative timeline-item">
+                                <h4 class="text-lg font-bold text-gray-800">2. Yaumul Ba'ats (Hari Kebangkitan)</h4>
+                                <p class="text-gray-600 mt-1">Peristiwa dibangkitkannya seluruh manusia dari alam kubur setelah Malaikat Israfil meniup sangkakala yang kedua.</p>
+                            </div>
+                            <div class="relative timeline-item">
+                                <h4 class="text-lg font-bold text-gray-800">3. Yaumul Mahsyar</h4>
+                                <p class="text-gray-600 mt-1">Hari dikumpulkannya seluruh manusia di padang yang sangat luas untuk menunggu pengadilan dari Allah SWT.</p>
+                            </div>
+                            <div class="relative timeline-item">
+                                <h4 class="text-lg font-bold text-gray-800">4. Yaumul Hisab (Hari Perhitungan)</h4>
+                                <p class="text-gray-600 mt-1">Hari di mana seluruh amal perbuatan manusia selama di dunia dihitung dan diperlihatkan, tidak ada sekecil apapun yang terlewat.</p>
+                            </div>
+                            <div class="relative timeline-item">
+                                <h4 class="text-lg font-bold text-gray-800">5. Yaumul Mizan (Hari Penimbangan)</h4>
+                                <p class="text-gray-600 mt-1">Penimbangan amal kebaikan dan keburukan. Jika berat amal kebaikan, ia beruntung. Jika berat keburukan, ia celaka.</p>
+                            </div>
+                            <div class="relative timeline-item">
+                                <h4 class="text-lg font-bold text-gray-800">6. Yaumul Jaza (Hari Pembalasan)</h4>
+                                <p class="text-gray-600 mt-1">Hari pembalasan atas seluruh amal. Balasan bagi amal baik adalah Surga, dan balasan bagi amal buruk adalah Neraka.</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Bagian 4: Implementasi -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-emerald-700 border-b-2 border-emerald-100 pb-2">4. Implementasi Sikap Mawas Diri</h3>
+                        <div class="bg-gray-800 text-white rounded-xl p-6">
+                            <p class="mb-4 text-gray-300">Dengan meyakini hari akhir, seorang muslim harus memiliki sikap <strong>mawas diri (introspeksi)</strong>. Perilaku tersebut tercermin dalam:</p>
+                            <ul class="grid md:grid-cols-2 gap-4">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-emerald-400 mt-1 mr-3"></i> <span>Rajin melaksanakan shalat lima waktu.</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-emerald-400 mt-1 mr-3"></i> <span>Menghindari perbuatan maksiat dan dosa.</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-emerald-400 mt-1 mr-3"></i> <span>Bertanggung jawab atas setiap tindakan.</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-emerald-400 mt-1 mr-3"></i> <span>Banyak bertaubat dan memperbanyak amal saleh.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TAB 3: SKENARIO PEMBELAJARAN -->
+                <div id="tab-skenario" class="tab-content">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-clock text-emerald-500 mr-3"></i> Skenario Alur Pembelajaran (2 JP x 40 Menit)
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Pendahuluan -->
+                        <div class="flex flex-col md:flex-row bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                            <div class="bg-blue-100 text-blue-800 font-bold p-4 md:w-48 flex items-center justify-center text-center">
+                                <div><i class="fas fa-door-open text-2xl block mb-2"></i> Pendahuluan<br><span class="text-sm font-normal">10 Menit</span></div>
+                            </div>
+                            <div class="p-5 flex-1">
+                                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                                    <li>Guru membuka dengan salam, doa bersama, dan presensi.</li>
+                                    <li><strong>Apersepsi & Pemantik:</strong> Guru menampilkan gambar/berita bencana alam di proyektor. Guru bertanya: <em>"Pernahkah kalian melihat berita gunung meletus? Apa yang kalian rasakan jika itu terjadi di depan mata kita? Lalu bagaimana dengan kiamat?"</em></li>
+                                    <li>Menyampaikan tujuan pembelajaran dan memotivasi siswa.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Inti -->
+                        <div class="flex flex-col md:flex-row bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                            <div class="bg-emerald-100 text-emerald-800 font-bold p-4 md:w-48 flex items-center justify-center text-center">
+                                <div><i class="fas fa-users-cog text-2xl block mb-2"></i> Kegiatan Inti<br><span class="text-sm font-normal">60 Menit</span></div>
+                            </div>
+                            <div class="p-5 flex-1">
+                                <ul class="list-disc pl-5 space-y-3 text-gray-700">
+                                    <li><strong>Eksplorasi Visual (15')</strong>: Guru menayangkan modul interaktif ini (Tab Materi). Mengajak siswa membaca dalil dan menonton ilustrasi alam semesta.</li>
+                                    <li><strong>Diskusi Kelompok (25')</strong>: Siswa dibagi menjadi 4-5 kelompok. Tugas: Menganalisis perbedaan mencolok antara kiamat sugra dan kubra beserta contohnya di lingkungan sekitar.</li>
+                                    <li><strong>Produk/Karya (20')</strong>: Setiap kelompok membuat "Peta Konsep Rangkaian Peristiwa Akhirat" (Mulai dari Barzakh hingga Jaza) di kertas karton atau aplikasi Canva, lalu mempresentasikannya secara singkat.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Penutup -->
+                        <div class="flex flex-col md:flex-row bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                            <div class="bg-orange-100 text-orange-800 font-bold p-4 md:w-48 flex items-center justify-center text-center">
+                                <div><i class="fas fa-flag-checkered text-2xl block mb-2"></i> Penutup<br><span class="text-sm font-normal">10 Menit</span></div>
+                            </div>
+                            <div class="p-5 flex-1">
+                                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                                    <li><strong>Refleksi:</strong> Guru memberikan pertanyaan reflektif: <em>"Setelah tahu tahapan akhirat yang panjang, apa satu kebiasaan buruk yang ingin kalian hentikan mulai hari ini?"</em></li>
+                                    <li><strong>Evaluasi Formatif:</strong> Mengerjakan kuis interaktif (Tab Kuis) secara bersama-sama.</li>
+                                    <li>Menyimpulkan materi, doa kifaratul majelis, dan salam penutup.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: KUIS FORMATIF -->
+                <div id="tab-kuis" class="tab-content">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-gamepad text-emerald-500 mr-3"></i> Kuis Interaktif
+                        </h2>
+                        <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-semibold" id="quiz-progress">Soal 1 / 5</span>
+                    </div>
+
+                    <!-- Quiz Container -->
+                    <div id="quiz-container" class="bg-white border-2 border-gray-100 rounded-2xl p-6 shadow-lg max-w-3xl mx-auto">
+                        
+                        <!-- Question Area -->
+                        <div id="question-area">
+                            <h3 id="question-text" class="text-xl font-semibold text-gray-800 mb-6 leading-relaxed"></h3>
+                            
+                            <!-- Options -->
+                            <div id="options-container" class="space-y-3">
+                                <!-- Generated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Feedback Area (Hidden initially) -->
+                        <div id="feedback-area" class="mt-6 p-4 rounded-xl hidden">
+                            <div class="flex items-start">
+                                <i id="feedback-icon" class="fas fa-check-circle text-2xl mr-3 mt-0.5"></i>
+                                <div>
+                                    <h4 id="feedback-title" class="font-bold text-lg mb-1"></h4>
+                                    <p id="feedback-text" class="text-sm"></p>
+                                </div>
+                            </div>
+                            <button id="next-btn" onclick="nextQuestion()" class="mt-4 w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg transition">Lanjut ke soal berikutnya <i class="fas fa-arrow-right ml-2"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Result Screen -->
+                    <div id="result-container" class="hidden bg-white border-2 border-emerald-100 rounded-2xl p-8 shadow-lg max-w-xl mx-auto text-center">
+                        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold mb-2">Kuis Selesai!</h2>
+                        <p class="text-gray-600 mb-6">Skor akhir kamu adalah:</p>
+                        <div class="text-6xl font-black text-emerald-600 mb-6" id="final-score">100</div>
+                        <p id="result-message" class="text-lg font-medium text-gray-700 mb-6"></p>
+                        <button onclick="resetQuiz()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition shadow-md">
+                            <i class="fas fa-redo mr-2"></i> Ulangi Kuis
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 text-center text-gray-500 text-sm">
+        <p>&copy; 2026 Modul Ajar PAI Interaktif - SMP Kelas 9</p>
+    </footer>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // Tab Navigation Logic
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            const tabBtns = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabBtns.length; i++) {
+                tabBtns[i].classList.remove("text-emerald-600", "border-emerald-600");
+                tabBtns[i].classList.add("text-gray-500", "border-transparent");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.remove("text-gray-500", "border-transparent");
+            evt.currentTarget.classList.add("text-emerald-600", "border-emerald-600");
+        }
+
+        // Quiz Logic
+        const quizData = [
+            {
+                question: "Hancurnya sebagian alam semesta seperti terjadinya gempa bumi, gunung meletus, atau meninggalnya seseorang disebut dengan...",
+                options: ["Kiamat Kubra", "Kiamat Sugra", "Yaumul Mahsyar", "Yaumul Hisab"],
+                correct: 1,
+                explanation: "Kiamat Sugra artinya kiamat kecil, yaitu hancurnya sebagian alam atau kematian individu."
+            },
+            {
+                question: "Surah yang menjelaskan bahwa pada hari kiamat bumi diguncangkan dengan dahsyat dan mengeluarkan beban beratnya adalah...",
+                options: ["QS. Al-Qari'ah", "QS. Al-Fatihah", "QS. Al-Zalzalah", "QS. Yasin"],
+                correct: 2,
+                explanation: "QS. Al-Zalzalah ayat 1-2 menjelaskan tentang guncangan bumi yang dahsyat."
+            },
+            {
+                question: "Setelah dibangkitkan dari alam kubur (Yaumul Ba'ats), manusia akan dikumpulkan di sebuah padang yang sangat luas. Peristiwa ini disebut...",
+                options: ["Yaumul Barzakh", "Yaumul Jaza", "Yaumul Mizan", "Yaumul Mahsyar"],
+                correct: 3,
+                explanation: "Yaumul Mahsyar adalah hari berkumpulnya seluruh umat manusia setelah dibangkitkan."
+            },
+            {
+                question: "Tahapan di mana seluruh amal perbuatan manusia ditimbang untuk mengetahui mana yang lebih berat, amal baik atau amal buruk, disebut...",
+                options: ["Yaumul Hisab", "Yaumul Mizan", "Yaumul Barzakh", "Yaumul Ba'ats"],
+                correct: 1,
+                explanation: "Mizan artinya timbangan. Yaumul Mizan adalah hari penimbangan amal."
+            },
+            {
+                question: "Bentuk mawas diri (introspeksi) yang paling tepat sebagai wujud beriman kepada hari akhir bagi seorang pelajar adalah...",
+                options: [
+                    "Menyumbangkan seluruh uang sakunya", 
+                    "Meninggalkan sekolah untuk fokus ibadah di masjid", 
+                    "Belajar dengan rajin, jujur saat ujian, dan tertib shalat 5 waktu", 
+                    "Terus merasa ketakutan hingga tidak mau bergaul"
+                ],
+                correct: 2,
+                explanation: "Mawas diri berarti menyeimbangkan dunia dan akhirat, rajin belajar, jujur, dan tetap menjaga ibadah wajib."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        const feedbackArea = document.getElementById("feedback-area");
+        const feedbackTitle = document.getElementById("feedback-title");
+        const feedbackText = document.getElementById("feedback-text");
+        const feedbackIcon = document.getElementById("feedback-icon");
+        const quizProgress = document.getElementById("quiz-progress");
+        const quizContainer = document.getElementById("quiz-container");
+        const resultContainer = document.getElementById("result-container");
+
+        function loadQuestion() {
+            answered = false;
+            feedbackArea.classList.add("hidden");
+            
+            const q = quizData[currentQuestion];
+            quizProgress.innerText = `Soal ${currentQuestion + 1} / ${quizData.length}`;
+            questionText.innerText = q.question;
+            
+            optionsContainer.innerHTML = "";
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 bg-white font-medium text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 focus:outline-none";
+                btn.innerHTML = `<span class="inline-block w-6 font-bold text-gray-400">${String.fromCharCode(65 + index)}.</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            if (answered) return; // Prevent multiple clicks
+            answered = true;
+
+            const q = quizData[currentQuestion];
+            const allBtns = optionsContainer.children;
+
+            // Disable all buttons
+            for (let i = 0; i < allBtns.length; i++) {
+                allBtns[i].disabled = true;
+                allBtns[i].classList.remove("hover:border-emerald-300", "hover:bg-emerald-50");
+                
+                // Highlight correct answer
+                if (i === q.correct) {
+                    allBtns[i].classList.add("correct-ans");
+                }
+            }
+
+            // Provide Feedback
+            feedbackArea.classList.remove("hidden");
+            
+            if (selectedIndex === q.correct) {
+                score += 20;
+                feedbackArea.className = "mt-6 p-4 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200";
+                feedbackIcon.className = "fas fa-check-circle text-2xl mr-3 mt-0.5 text-emerald-500";
+                feedbackTitle.innerText = "Benar Sekali!";
+            } else {
+                btnElement.classList.add("wrong-ans");
+                feedbackArea.className = "mt-6 p-4 rounded-xl bg-red-50 text-red-800 border border-red-200";
+                feedbackIcon.className = "fas fa-times-circle text-2xl mr-3 mt-0.5 text-red-500";
+                feedbackTitle.innerText = "Oops, Kurang Tepat!";
+            }
+            
+            feedbackText.innerText = q.explanation;
+            
+            // Change button text if last question
+            const nextBtn = document.getElementById("next-btn");
+            if (currentQuestion === quizData.length - 1) {
+                nextBtn.innerHTML = "Lihat Hasil Akhir <i class='fas fa-flag-checkered ml-2'></i>";
+            } else {
+                nextBtn.innerHTML = "Lanjut ke soal berikutnya <i class='fas fa-arrow-right ml-2'></i>";
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizContainer.classList.add("hidden");
+            quizProgress.classList.add("hidden");
+            resultContainer.classList.remove("hidden");
+            
+            document.getElementById("final-score").innerText = score;
+            
+            const msgEl = document.getElementById("result-message");
+            if (score === 100) {
+                msgEl.innerText = "Luar biasa! Pemahamanmu tentang Hari Akhir sangat sempurna.";
+            } else if (score >= 60) {
+                msgEl.innerText = "Kerja bagus! Terus tingkatkan belajarmu ya.";
+            } else {
+                msgEl.innerText = "Jangan menyerah! Mari baca materi lagi dan coba kembali.";
+            }
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            quizContainer.classList.remove("hidden");
+            quizProgress.classList.remove("hidden");
+            resultContainer.classList.add("hidden");
+            loadQuestion();
+        }
+
+        // Initialize first load
+        window.onload = () => {
+            loadQuestion();
+        };
+    </script>
+</body>
+</html>
